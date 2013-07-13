@@ -6,8 +6,8 @@ import java.awt.event.KeyEvent;
 
 public class Actor {
 
-	protected int dx;
-	protected int dy;
+	protected int dx = 0;
+	protected int dy = 0;
 	protected int x;
 	protected int y;
 	protected int boundx;

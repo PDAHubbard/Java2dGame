@@ -5,10 +5,10 @@ import javax.swing.JFrame;
 public class Pong extends JFrame {
 
 	public Pong() {
-		add(new Board(400,300));
+		add(new Board(700,300));
 		
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 315);
+        setSize(700, 315);
         setLocationRelativeTo(null);
         setTitle("Pong");
         setResizable(false);

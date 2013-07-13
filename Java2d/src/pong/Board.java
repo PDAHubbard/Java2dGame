@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -58,7 +59,8 @@ public class Board extends JPanel implements ActionListener{
 
 	private void setupBall() {
 
-		ball = new Ball(boundx, boundy);
+		ball = Ball.get();
+		ball.setBounds(boundx, boundy);
 		
 	}
 
@@ -82,33 +84,97 @@ public class Board extends JPanel implements ActionListener{
 	}
 	
 	public void actionPerformed(ActionEvent e){
+		
+		long before, after, sleep;
+		before = System.nanoTime();
+		
 		ball.move();
 		bat1.move();
 		bat2.move();
 		checkCollisions();
 		drawScore();
 		repaint();
+		
+		after = System.nanoTime();
+		sleep = TimeUnit.NANOSECONDS.toMillis(after-before);
+		
+		if (sleep>0){
+			try {
+				Thread.sleep(sleep);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
 	
 	private void drawScore() {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private void p1Point(){
+		score_player1++;
+		restart();
+	}
+		
+	private void p2Point(){
+		score_player2++;
+		restart();
+	}
+	private void restart() {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		setupBall();
+	}
+	
+	private void humanReadable(int y){
+		String pos;
+		switch (y) {
+		case -2	: pos = "Top edge"; break;
+		case -1 : pos = "Top mid"; break;
+		case 0  : pos = "Mid"; break;
+		case 1  : pos = "Bottom mid"; break;
+		case 2  : pos = "Bottom edge"; break;
+		default : pos = (new Integer(y)).toString();
+		}
+		System.out.println(pos);
+	}
+
+
 
 	public void checkCollisions(){
 		Rectangle rball = ball.getBounds();
 		Rectangle rbat1 = bat1.getBounds();
 		Rectangle rbat2 = bat2.getBounds();
 		
-		if (rball.intersects(rbat1) || rball.intersects(rbat2)){
-			ball.hit();
+		if (rball.intersects(rbat2)){
+			Rectangle f = rball.intersection(rbat2);
+			int y = (f.y-rbat2.y);
+			y-=(rbat2.height/2);
+			y/=(rbat2.height/4);
+			ball.hit(y);
+			humanReadable(y);
+		}
+		
+		if (rball.intersects(rbat1)){
+			Rectangle f = rball.intersection(rbat1);
+			int y = (f.y-rbat1.y);
+			y-=(rbat1.height/2);
+			y/=(rbat1.height/4);
+			ball.hit(y);
+			humanReadable(y);
 		}
 		
 		if (ball.getx()<=0){
-			score_player2++;
+			p2Point();
 		}
 		if (ball.getx()>=boundx-5){
-			score_player1++;
+			p1Point();
 		}
 	}
 	
