@@ -4,6 +4,11 @@ import javax.swing.JFrame;
 
 public class Skeleton extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 501187451339743835L;
+
 	public Skeleton() {
 		add(new Board());
 		setTitle("Skeleton");

@@ -18,6 +18,10 @@ import javax.swing.Timer;
 
 public class Board extends JPanel implements ActionListener{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -482433963611938131L;
 	private Timer timer;
 	private Ball ball;
 	private Bat bat1, bat2;

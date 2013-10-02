@@ -4,6 +4,11 @@ import javax.swing.JFrame;
 
 public class Pong extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6876111330624142640L;
+
 	public Pong() {
 		add(new Board(700,300));
 		
