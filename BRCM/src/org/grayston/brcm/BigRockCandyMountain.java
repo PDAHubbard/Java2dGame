@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -161,6 +162,63 @@ public class BigRockCandyMountain {
 		//Draw all entities
 		for (Entity entity : entities) {
 			entity.draw();
+		}
+		
+		//brute force collision
+		for (int p=0; p< entities.size(); p++){
+			for (int s=p+1; s < entities.size(); s++){
+				Entity me = entities.get(p);
+				Entity him = entities.get(s);
+				
+				if (me.collidesWith(him)) {
+					me.collidedWith(him);
+					him.collidedWith(me);
+				}
+			}
+		}
+		
+		entities.removeAll(removeList);
+		removeList.clear();
+		
+		if (logicRequiredThisLoop) {
+			for ( Entity entity : entities ) {
+				entity.doLogic();
+			}
+			logicRequiredThisLoop = false;
+		}
+		
+		if (waitingForKeyPress) {
+			message.draw(width/2-75, height/2);
+		}
+		
+		// Move the player
+		
+		boolean L = hasInput(Keyboard.KEY_L);
+		boolean H = hasInput(Keyboard.KEY_H);
+		boolean J = hasInput(Keyboard.KEY_J);
+		boolean K = hasInput(Keyboard.KEY_K);
+		
+		if (!soundManager.isPlayingSound()) {
+			if (L && !H) {
+				player.setDx(movespeed);
+				soundManager.playSound(MOVE_RIGHT);
+			}
+			else if (H && !L) {
+				player.SetDx(-movespeed);
+				soundManager.playSound(MOVE_LEFT);
+			}
+			else if (J && !K) {
+				player.setDy(-movespeed);
+				soundManager.playSound(MOVE_DOWN);
+			}
+			else if (K&& !J) {
+				player.setDy(movespeed);
+				soundManager.playSound(MOVE_UP);
+			}
+		}
+		
+		if ((Display.isCloseRequested()) || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && isApplication) {
+			BigRockCandyMountain.isRunning=false;
 		}
 		
 	}
